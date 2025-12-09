@@ -9,12 +9,16 @@
 from settings import SITE_WORK
 from src.business.load_page.load_page import LoadPage
 from src.business.tasks.promo_work.to_go_promo_page.click_by_cabinet_ import click_by_cabinet
+from src.business.tasks.promo_work.to_go_promo_page.go_promo_clickers.start_go_promo_clickers_ import \
+    start_go_promo_clickers
 
 
 async def to_go_promo_page(settings):
     driver = settings['driver']
 
     cabinet_id = settings['cabinet_id']
+
+    print(f'Захожу в кабинет "{cabinet_id}"')
 
     res_load = LoadPage(driver, SITE_WORK).loop_load_page(f"//*[contains(*, 'Все кабинеты')] | "
                                                           f"//*[contains(text(), 'Все кабинеты')]")
@@ -27,4 +31,6 @@ async def to_go_promo_page(settings):
     if not res_to_go_cabinet:
         return False
 
-    print()
+    res_go_promos = await start_go_promo_clickers(settings)
+
+    return res_go_promos

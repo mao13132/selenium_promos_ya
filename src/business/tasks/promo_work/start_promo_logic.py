@@ -26,7 +26,7 @@ class StartPromoLogic:
         is_valid_cabinet = await to_go_promo_page(self.settings)
 
         if not is_valid_cabinet:
-            error_ = f'Не смог зайти в кабинет "{self.cabinet}"'
+            error_ = f'Не смог зайти на страницу акций в кабинете "{self.cabinet}"'
 
             raise Exception(error_)
 
