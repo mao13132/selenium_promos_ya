@@ -18,6 +18,7 @@ FAKE_TASK_CONFIG: Dict[str, Any] = {
     "created_by_user_id": str(ADMIN),  # Telegram ID инициатора
     "parameters": {
         "cabinet": "TexnoLine77A",
+        "cabinet_id": "210416269"
     },
 }
 

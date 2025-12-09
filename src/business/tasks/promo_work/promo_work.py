@@ -12,6 +12,7 @@ from settings import CHROME_PROFILE, PATCH_PROFILES, MOKE_START_WORK
 from src.browser.force_session_save_cdp import safe_force_save_session_cdp
 from src.browser.get_browser_and_close_ import get_browser_and_close
 from src.business.check_auth.start_check_auth import StartCheckAuth
+from src.business.tasks.promo_work.start_promo_logic import StartPromoLogic
 from src.utils._logger import logger_msg
 from src.utils.telegram_debug import SendlerOneCreate
 from src.business.tasks_wait.fake_account_data import build_fake_account
@@ -38,11 +39,17 @@ class PromoWork:
         else:
             data_account = await self.BotDB.accounts.read_by_id(task.account_id)
 
+        self.settings['data_account'] = data_account
+
         other_params = json.loads(task.parameters)
 
         cabinet = other_params.get('cabinet', False)
 
+        cabinet_id = other_params.get('cabinet_id', False)
+
         self.settings['cabinet'] = cabinet
+
+        self.settings['cabinet_id'] = cabinet_id
 
         with get_browser_and_close(self.path_chrome, self.chrome_profile, self.path_short_chrome) as browser:
             if not browser or not browser.driver:
@@ -76,6 +83,6 @@ class PromoWork:
 
                 return 'is_user_auth'
 
-            res_get_source = await StartBusiness(self.settings).start_business_logic()
+            res_get_source = await StartPromoLogic(self.settings).start_logic()
 
             return True

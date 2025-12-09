@@ -1,6 +1,24 @@
 import os
-
+import platform
+import time
 import undetected_chromedriver as uc
+
+# =========================
+# ✅ Определение ОС
+# =========================
+
+IS_WINDOWS = platform.system() == "Windows"
+
+if IS_WINDOWS:
+    try:
+        import win32gui
+        import win32con
+
+        WIN32_AVAILABLE = True
+    except ImportError as es:
+        WIN32_AVAILABLE = False
+else:
+    WIN32_AVAILABLE = False
 
 
 class CreatBrowser:
@@ -9,12 +27,9 @@ class CreatBrowser:
         options = uc.ChromeOptions()
 
         options.add_argument('--no-sandbox')
-
         options.add_argument('--disable-dev-shm-usage')
-
         options.add_argument("--log-level=3")
         options.add_argument("--disable-gpu")
-        options.add_argument("--no-sandbox")
         options.add_argument("--disable-setuid-sandbox")
 
         options.add_argument("--ignore-certificate-errors")
@@ -22,18 +37,11 @@ class CreatBrowser:
 
         options.add_argument("--disable-extensions")
         options.add_argument('--disable-application-cache')
-        options.add_argument("--disable-dev-shm-usage")
-        # options.add_argument('--headless=new')
 
         options.add_argument("--password-store=basic")
         options.add_argument("--no-first-run")
         options.add_argument("--no-default-browser-check")
-        # options.add_argument(
-        #     "--disable-features=PrivacySandboxSettings4,PrivacySandboxAdsAPIs,Topics,AdMeasurement,ProtectedAudience,FirstPartySets")
-        #
-        # options.add_argument("--disable-features=OptimizationGuideModelDownloading,OptimizationHints")
-        # options.add_argument("--disable-features=InterestFeedV2,Feed")
-        # options.add_argument("--disable-features=AutofillServerCommunication")
+
         options.add_argument(
             "--disable-features="
             "OptimizationGuideModelDownloading,"
@@ -49,6 +57,7 @@ class CreatBrowser:
             "ProtectedAudience,"
             "FirstPartySets"
         )
+
         # ускорение
         options.add_argument("--disable-background-networking")
         options.add_argument("--disable-sync")
@@ -64,8 +73,11 @@ class CreatBrowser:
 
         options.add_argument("--disable-ipv6")
 
-        full_path = os.path.join(path_short_chrome, name_profile_chrome)
+        # =========================
+        # ✅ Профиль
+        # =========================
 
+        full_path = os.path.join(path_short_chrome, name_profile_chrome)
         os.makedirs(full_path, exist_ok=True)
 
         options.add_argument(f'--user-data-dir={full_path}')
@@ -82,14 +94,19 @@ class CreatBrowser:
         for key, value in experimental_options.items():
             options.add_experimental_option(key, value)
 
+        # =========================
+        # ✅ Запуск драйвера
+        # =========================
+
         self.driver = uc.Chrome(
             options=options,
             version_main=142,
-            driver_executable_path=None,  # Автоматический поиск
+            driver_executable_path=None,
         )
 
         if self.driver:
-            self.driver.maximize_window()
+            self.force_foreground_window()  # ✅ ВАЖНО: сначала фокус
+            self.driver.maximize_window()  # ✅ потом размер
 
             try:
                 browser_version = self.driver.capabilities['browserVersion']
@@ -97,3 +114,20 @@ class CreatBrowser:
                 print(f"\nБраузер: {browser_version} драйвер: {driver_version}. Профиль: {path_short_chrome}")
             except:
                 print(f'\nНе получилось определить версию uc браузера')
+
+    # =========================
+    # ✅ Принудительный вывод окна на передний план (ТОЛЬКО WINDOWS)
+    # =========================
+
+    def force_foreground_window(self):
+        if not WIN32_AVAILABLE:
+            return
+
+        time.sleep(1)
+
+        try:
+            hwnd = win32gui.GetForegroundWindow()
+            win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+            win32gui.SetForegroundWindow(hwnd)
+        except Exception as e:
+            print("Не удалось вывести окно на передний план:", e)

@@ -39,7 +39,7 @@ class StartCheckAuth:
         is_auth = False
 
         for _try in range(3):
-            print(f'Захожу в Yandex Partner')
+            print(f'Захожу в Yandex Partner для проверки авторизации')
 
             res_load = LoadPage(self.driver, self.url).loop_load_page(f"//*[contains(*, 'Войти')] | "
                                                                       f"//*[contains(text(), 'Войти')] | "
