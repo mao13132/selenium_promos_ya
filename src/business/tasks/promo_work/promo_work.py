@@ -9,7 +9,9 @@
 import json
 
 from settings import CHROME_PROFILE, PATCH_PROFILES, MOKE_START_WORK
+from src.browser.force_session_save_cdp import safe_force_save_session_cdp
 from src.browser.get_browser_and_close_ import get_browser_and_close
+from src.business.check_auth.start_check_auth import StartCheckAuth
 from src.utils._logger import logger_msg
 from src.utils.telegram_debug import SendlerOneCreate
 from src.business.tasks_wait.fake_account_data import build_fake_account
@@ -57,6 +59,23 @@ class PromoWork:
             self.settings['driver'] = driver
 
             # Проверка авторизации
-            await StartCheckAuth(self.settings).start_work()
+            check_auth = await StartCheckAuth(self.settings).start_work()
 
-            print()
+            if not check_auth:
+                return False
+
+            # Если получили 'is_user_auth', применяем принудительное сохранение сессии
+            if str(check_auth) == 'is_user_auth':
+                print("🔄 Применяем принудительное сохранение сессии перед перезапуском браузера")
+
+                # Получаем текущий URL для восстановления после сохранения сессии
+                current_url = driver.current_url
+
+                # Выполняем принудительное сохранение сессии через CDP
+                force_save_result = safe_force_save_session_cdp(driver, current_url)
+
+                return 'is_user_auth'
+
+            res_get_source = await StartBusiness(self.settings).start_business_logic()
+
+            return True
