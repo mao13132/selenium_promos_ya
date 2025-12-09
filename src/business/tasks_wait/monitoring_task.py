@@ -9,7 +9,9 @@
 import asyncio
 from typing import Callable
 
+from settings import MOKE_START_WORK
 from src.business.tasks_wait.dispatcher_task import TaskDispatcher
+from src.business.tasks_wait.fake_task_data import build_fake_task
 from src.utils._logger import logger_msg
 
 
@@ -31,6 +33,11 @@ class TaskMonitor:
         try:
             # Получаем задачи в ожидании
             pending_tasks = await self.BotDB.tasks.get_pending_tasks()
+
+            # При включённом флаге добавляем фейковую задачу к очереди
+            if MOKE_START_WORK:
+                pending_tasks = list(pending_tasks)
+                pending_tasks.append(build_fake_task())
 
             if not pending_tasks:
                 return

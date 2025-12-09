@@ -8,10 +8,11 @@
 # ---------------------------------------------
 import json
 
-from settings import CHROME_PROFILE, PATCH_PROFILES
+from settings import CHROME_PROFILE, PATCH_PROFILES, MOKE_START_WORK
 from src.browser.get_browser_and_close_ import get_browser_and_close
 from src.utils._logger import logger_msg
 from src.utils.telegram_debug import SendlerOneCreate
+from src.business.tasks_wait.fake_account_data import build_fake_account
 
 
 class PromoWork:
@@ -30,9 +31,16 @@ class PromoWork:
         id_client = task.created_by_user_id
         self.settings['id_client'] = id_client
 
-        data_account = await self.BotDB.accounts.read_by_id(task.account_id)
+        if MOKE_START_WORK:
+            data_account = build_fake_account(task.account_id)
+        else:
+            data_account = await self.BotDB.accounts.read_by_id(task.account_id)
 
         other_params = json.loads(task.parameters)
+
+        cabinet = other_params.get('cabinet', False)
+
+        self.settings['cabinet'] = cabinet
 
         with get_browser_and_close(self.path_chrome, self.chrome_profile, self.path_short_chrome) as browser:
             if not browser or not browser.driver:

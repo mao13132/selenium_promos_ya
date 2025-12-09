@@ -84,7 +84,7 @@ class CreatBrowser:
 
         self.driver = uc.Chrome(
             options=options,
-            version_main=None,  # Автоопределение версии
+            version_main=142,
             driver_executable_path=None,  # Автоматический поиск
         )
 

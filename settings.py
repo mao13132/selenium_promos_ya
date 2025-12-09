@@ -25,7 +25,7 @@ TOKEN = os.getenv('TOKEN')
 
 SQL_URL = os.getenv('SQL_URL')
 
-CHROME_PROFILE = f'79054738463'
+CHROME_PROFILE = f'promos_ya'
 
 NAME_PRODUCT = f'Анализатор Yandex Акций'
 
@@ -36,3 +36,6 @@ NO_CREATE_BROWSER = False
 
 # Не менять состояние задач
 MOKE_EDIT_TASK = True
+
+# Не ожидать, а запускать задачу по promo
+MOKE_START_WORK = True

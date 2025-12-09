@@ -7,7 +7,7 @@
 # 2.0       2024    Task Monitor Implementation
 #
 # ---------------------------------------------
-
+from src.business.tasks.promo_work.promo_work import PromoWork
 from src.business.tasks_wait.monitoring_task import TaskMonitor
 
 

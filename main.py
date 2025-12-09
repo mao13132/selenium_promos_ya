@@ -9,8 +9,6 @@
 import asyncio
 import logging
 
-from src.business.start_work import StartWork
-
 from src.business.start_business import StartBusiness
 from src.utils._logger import logger_msg
 from src.utils.telegram_debug import SendlerOneCreate
