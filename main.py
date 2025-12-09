@@ -10,7 +10,12 @@ import asyncio
 import logging
 
 from src.business.start_work import StartWork
+
+from src.business.start_business import StartBusiness
+from src.utils._logger import logger_msg
+from src.utils.telegram_debug import SendlerOneCreate
 from src.utils.utils_decorators import catch_and_report
+from src.sql.connector import BotDB
 
 import warnings
 
@@ -25,13 +30,24 @@ logging.basicConfig(handlers=[logging.FileHandler(filename="./logs.txt",
 
 @catch_and_report('⭕️ Ошибка главного потока')
 async def main():
-    settings_work = {}
+    res_init = await BotDB.init_bases()
 
-    res_work = await StartWork(settings_work).start_work()
+    if not res_init:
+        msg = f'WB Lock: Нет подключения к базе данных. Останавливаю работу'
 
-    print(f'Работа завершена')
+        SendlerOneCreate('').save_text(msg)
 
-    return res_work
+        logger_msg(msg)
+
+        return 'no_sql'
+
+    settings = {
+        'BotDB': BotDB,
+    }
+
+    res_ = await StartBusiness(settings).start_business()
+
+    return res_
 
 
 if __name__ == '__main__':
