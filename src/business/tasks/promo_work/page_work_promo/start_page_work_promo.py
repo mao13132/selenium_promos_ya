@@ -11,6 +11,7 @@ import asyncio
 from src.business.tasks.promo_work.page_work_promo.end_scroll_page.end_scroll_page_ import is_end_scroll_page
 from src.business.tasks.promo_work.page_work_promo.get_all_products_rows.get_all_products_rows_ import \
     get_all_products_rows
+from src.business.tasks.promo_work.page_work_promo.iter_products.iter_products_ import IterProducts
 
 
 class StartPageWorkPromo:
@@ -28,26 +29,27 @@ class StartPageWorkPromo:
         count_page = 1
 
         while True:
-            all_rows = await get_all_products_rows(self.settings)
-
-            if not all_rows:
-                return False
-
-            print(f'На {count_page} странице {len(all_rows)} товаров')
-
             is_end_page = is_end_scroll_page(self.driver)
 
-            if is_end_page:
-                await asyncio.sleep(3)
+            # Листаю в самый низ, пока не долистаю в самый низ
+            if not is_end_page:
+                self.driver.execute_script("window.scrollBy(0, 150);")
 
-                print(f'Конец страницы')
-
-            try:
-                self.driver.execute_script("window.scrollBy(0, 100);")
-            except:
                 await asyncio.sleep(1)
 
                 continue
+
+            # В самом низу страницы
+
+            await asyncio.sleep(3)
+
+            all_rows = await get_all_products_rows(self.settings)
+
+            print(f'На {count_page} странице {len(all_rows)} товаров')
+
+            work_from_products = await IterProducts(self.settings).start_work(all_rows)
+
+            print(f'Конец страницы')
 
             print()
 
