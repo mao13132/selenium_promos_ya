@@ -7,8 +7,10 @@
 #
 # ---------------------------------------------
 import json
+from os import sep
 
-from settings import CHROME_PROFILE, PATCH_PROFILES, MOKE_START_WORK
+from settings import CHROME_PROFILE, PATCH_PROFILES, MOKE_START_WORK, profiles_path
+from src.browser.copy_profile_ import copy_profile
 from src.browser.force_session_save_cdp import safe_force_save_session_cdp
 from src.browser.get_browser_and_close_ import get_browser_and_close
 from src.business.check_auth.start_check_auth import StartCheckAuth
@@ -81,7 +83,8 @@ class PromoWork:
                 # Выполняем принудительное сохранение сессии через CDP
                 force_save_result = safe_force_save_session_cdp(driver, current_url)
 
-                return 'is_user_auth'
+                res_copy = await copy_profile({'path_chrome': self.path_chrome,
+                                               'profile_path': f"{profiles_path}{sep}{self.chrome_profile}"})
 
             res_get_source = await StartPromoLogic(self.settings).start_logic()
 

@@ -6,8 +6,7 @@
 # 1.0       2023    Initial Version
 #
 # ---------------------------------------------
-from settings import SITE_WORK
-from src.business.load_page.load_page import LoadPage
+from src.business.tasks.promo_work.get_current_promos.start_get_current_promos import StartGetCurrentPromos
 from src.business.tasks.promo_work.to_go_promo_page.start_to_go_promo_page_ import to_go_promo_page
 
 
@@ -29,5 +28,7 @@ class StartPromoLogic:
             error_ = f'Не смог зайти на страницу акций в кабинете "{self.cabinet}"'
 
             raise Exception(error_)
+
+        promos = await StartGetCurrentPromos(self.settings).start_work()
 
         print()
