@@ -6,10 +6,14 @@
 # 1.0       2023    Initial Version
 #
 # ---------------------------------------------
+import asyncio
+
 from src.business.tasks.promo_work.get_active_promos.get_active_promos_ import get_active_promos
 from src.business.tasks.promo_work.go_promo_page.go_promo_page_ import go_promo_page
 from src.business.tasks.promo_work.iter_promos._go_promos_page import go_promos_page
+from src.business.tasks.promo_work.page_work_promo.start_page_work_promo import StartPageWorkPromo
 from src.utils._logger import logger_msg
+from src.utils.utils_decorators import catch_and_report
 
 
 class IterPromos:
@@ -23,6 +27,7 @@ class IterPromos:
         self.data_promo = settings['data_promo']
         self.cabinet = settings['cabinet']
 
+    @catch_and_report('⭕️ iter_promos')
     async def start_work(self):
         promo_url = self.driver.current_url
 
@@ -31,14 +36,18 @@ class IterPromos:
 
             print(f'Начинаю заходить в акцию {name_promo}')
 
-            is_to_go_page = await go_promo_page({'driver': self.driver, 'url': promo_url})
+            # Если не в первый раз, то перезаходим на главную
+            if count_promo > 0:
+                is_to_go_page = await go_promo_page({'driver': self.driver, 'url': promo_url})
 
-            if not is_to_go_page:
-                error_ = f'Не смог зайти на главную страницу акций "{self.cabinet}"'
+                if not is_to_go_page:
+                    error_ = f'Не смог зайти на главную страницу акций "{self.cabinet}"'
 
-                logger_msg(error_)
+                    logger_msg(error_)
 
-                continue
+                    continue
+
+                await asyncio.sleep(3)
 
             promos = await get_active_promos({'driver': self.driver})
 
@@ -55,6 +64,8 @@ class IterPromos:
 
             if not is_good_load:
                 continue
+
+            res_work = await StartPageWorkPromo(self.settings).start_work()
 
             print()
 

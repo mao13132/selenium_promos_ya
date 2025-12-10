@@ -13,6 +13,8 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from selenium.webdriver.common.by import By
 
+from src.utils._logger import logger_msg
+
 
 def _click_promo(promo):
     try:
@@ -76,4 +78,6 @@ async def open_popup_promo(settings):
 
     error_ = f'Не смог открыть окно с акцией'
 
-    raise Exception(error_)
+    logger_msg(error_)
+
+    return False

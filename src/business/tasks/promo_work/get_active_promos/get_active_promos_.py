@@ -26,7 +26,7 @@ async def get_active_promos(settings):
     for _try in range(3):
         promos = _get_active_promos(driver)
 
-        if not promos:
+        if not promos or len(promos) < 1:
             await asyncio.sleep(1)
 
             continue

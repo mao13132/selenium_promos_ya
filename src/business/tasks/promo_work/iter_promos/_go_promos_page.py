@@ -43,8 +43,7 @@ async def go_promos_page(settings):
 
             continue
 
-        good_load = wait_load_cabinet(driver, f"//*[contains(@*[starts-with(name(), 'data-e2e')], 'file') and "
-                                              f"contains(@*[starts-with(name(), 'data-e2e')], 'upload')]")
+        good_load = wait_load_cabinet(driver, f"//span[contains(text(), 'Цена по')]", count=120)
 
         if not good_load:
             await asyncio.sleep(1)
