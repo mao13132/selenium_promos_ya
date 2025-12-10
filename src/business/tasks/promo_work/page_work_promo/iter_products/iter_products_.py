@@ -6,6 +6,7 @@
 # 1.0       2023    Initial Version
 #
 # ---------------------------------------------
+from src.business.analyser_click_product.analyser_click_product_ import analyser_click_product
 from src.business.tasks.promo_work.page_work_promo.extract_info_by_product.extract_info_by_product_ import \
     extract_info_by_product
 from src.business.tasks.promo_work.page_work_promo.iter_products.activate_element_ import activate_element
@@ -21,6 +22,7 @@ class IterProducts:
         self.promos = settings['promos']
         self.data_promo = settings['data_promo']
         self.cabinet = settings['cabinet']
+        self.percent_list = settings['percent_list']
 
     async def start_work(self, products):
         is_change = False
@@ -29,5 +31,16 @@ class IterProducts:
             activate_element(self.driver, product)
 
             data_product = await extract_info_by_product({'driver': self.driver, 'product': product})
+
+            need_click = await analyser_click_product({'data_product': data_product, 'percent_list': self.percent_list})
+
+            if not need_click:
+                print(f'Товар {data_product["name"]} не нуждается в действиях')
+
+                data_product['action'] = ''
+
+                continue
+
+            data_product['action'] = need_click['action']
 
             print()

@@ -11,7 +11,7 @@ from typing import Callable
 
 from settings import MOKE_START_WORK
 from src.business.tasks_wait.dispatcher_task import TaskDispatcher
-from src.business.tasks_wait.fake_task_data import build_fake_task
+from src.business.fake_task.fake_task_data import build_fake_task
 from src.utils._logger import logger_msg
 
 

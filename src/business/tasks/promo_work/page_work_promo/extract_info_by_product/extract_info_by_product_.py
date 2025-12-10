@@ -11,6 +11,23 @@ import time
 from selenium.webdriver.common.by import By
 
 
+def _get_status_select(product):
+    for _try in range(3):
+        try:
+            status = product.find_element(by=By.XPATH, value=f".//td//input[@type='checkbox']").get_attribute('checked')
+        except:
+            time.sleep(1)
+
+            continue
+
+        if 'true' in str(status):
+            return True
+        else:
+            return False
+
+    return False
+
+
 def _get_name(product):
     for _try in range(3):
         try:
@@ -31,6 +48,16 @@ def _get_stocks(product):
         try:
             stocks = product.find_element(by=By.XPATH,
                                           value=f".//*[contains(@data-e2e, 'stock-total-count')]").text
+        except:
+            time.sleep(1)
+
+            continue
+
+        if 'нет на складе' in str(stocks).lower():
+            return 0
+
+        try:
+            stocks = int(stocks)
         except:
             time.sleep(1)
 
@@ -110,9 +137,9 @@ def _get_percent(product):
 
 
 async def extract_info_by_product(settings):
-    driver = settings['driver']
-
     product = settings['product']
+
+    select = _get_status_select(product)
 
     name = _get_name(product)
 
@@ -127,6 +154,7 @@ async def extract_info_by_product(settings):
     old_price = _get_old_salle(product)
 
     return_product_data = {
+        'select': select,
         'name': name,
         'stocks': stocks,
         'catalog_price': catalog_price,

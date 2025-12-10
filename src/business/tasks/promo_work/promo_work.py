@@ -17,7 +17,7 @@ from src.business.check_auth.start_check_auth import StartCheckAuth
 from src.business.tasks.promo_work.start_promo_logic import StartPromoLogic
 from src.utils._logger import logger_msg
 from src.utils.telegram_debug import SendlerOneCreate
-from src.business.tasks_wait.fake_account_data import build_fake_account
+from src.business.fake_task.fake_account_data import build_fake_account
 
 
 class PromoWork:
@@ -49,9 +49,13 @@ class PromoWork:
 
         cabinet_id = other_params.get('cabinet_id', False)
 
+        percent_list = other_params.get('percent_list', '[]')
+
         self.settings['cabinet'] = cabinet
 
         self.settings['cabinet_id'] = cabinet_id
+
+        self.settings['percent_list'] = json.loads(percent_list)
 
         with get_browser_and_close(self.path_chrome, self.chrome_profile, self.path_short_chrome) as browser:
             if not browser or not browser.driver:
