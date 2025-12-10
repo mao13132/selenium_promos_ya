@@ -6,6 +6,7 @@
 # 1.0       2023    Initial Version
 #
 # ---------------------------------------------
+from src.business.action_go.action_go_ import action_go
 from src.business.analyser_click_product.analyser_click_product_ import analyser_click_product
 from src.business.tasks.promo_work.page_work_promo.extract_info_by_product.extract_info_by_product_ import \
     extract_info_by_product
@@ -30,17 +31,31 @@ class IterProducts:
         for product in products:
             activate_element(self.driver, product)
 
+            self.driver.execute_script("window.scrollBy(0, 50);")
+
             data_product = await extract_info_by_product({'driver': self.driver, 'product': product})
 
             need_click = await analyser_click_product({'data_product': data_product, 'percent_list': self.percent_list})
 
             if not need_click:
-                print(f'Товар {data_product["name"]} не нуждается в действиях')
+                print(f'\nТовар {data_product["name"]} не нуждается в действиях\n')
 
                 data_product['action'] = ''
 
                 continue
 
-            data_product['action'] = need_click['action']
+            # Распаковываю action
+            action = need_click['action']
 
-            print()
+            data_product['action'] = action
+
+            res_action_work = await action_go({'driver': self.driver, 'product': product, 'action': action, 'data_product': data_product})
+
+            if res_action_work:
+                is_change = True
+
+            print(f'\nИзменил состояние для товара {data_product["name"]}\n')
+
+            continue
+
+        return is_change

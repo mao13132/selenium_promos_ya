@@ -10,22 +10,7 @@ import time
 
 from selenium.webdriver.common.by import By
 
-
-def _get_status_select(product):
-    for _try in range(3):
-        try:
-            status = product.find_element(by=By.XPATH, value=f".//td//input[@type='checkbox']").get_attribute('checked')
-        except:
-            time.sleep(1)
-
-            continue
-
-        if 'true' in str(status):
-            return True
-        else:
-            return False
-
-    return False
+from src.business.get_state_select.get_state_select_ import get_state_select
 
 
 def _get_name(product):
@@ -127,9 +112,7 @@ def _get_percent(product):
         try:
             percent_int = int(percent[:-1])
         except:
-            time.sleep(1)
-
-            continue
+            return 0
 
         return percent_int
 
@@ -139,7 +122,7 @@ def _get_percent(product):
 async def extract_info_by_product(settings):
     product = settings['product']
 
-    select = _get_status_select(product)
+    select = get_state_select(product)
 
     name = _get_name(product)
 
