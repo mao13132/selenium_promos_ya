@@ -11,6 +11,7 @@ import asyncio
 from selenium.webdriver.common.by import By
 
 from src.business.full_load.full_load import full_load
+from src.business.tasks.promo_work.load_more.load_more_ import load_more
 from src.business.tasks.promo_work.to_go_promo_page.wait_load_cabinet_ import wait_load_cabinet
 
 
@@ -45,6 +46,8 @@ async def click_by_cabinet(settings):
 
         if not res_click:
             await asyncio.sleep(1)
+
+            res_ = await load_more({'driver': driver})
 
             continue
 

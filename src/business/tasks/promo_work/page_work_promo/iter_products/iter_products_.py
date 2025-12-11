@@ -26,21 +26,30 @@ class IterProducts:
         self.percent_list = settings['percent_list']
 
     async def start_work(self, products):
+        products_history = []
+
         is_change = False
 
-        for product in products:
+        for count_product, product in enumerate(products):
             activate_element(self.driver, product)
 
             self.driver.execute_script("window.scrollBy(0, 50);")
 
-            data_product = await extract_info_by_product({'driver': self.driver, 'product': product})
+            data_product = await extract_info_by_product(
+                {'driver': self.driver,
+                 'product': product,
+                 'count_product': count_product
+                 })
 
-            need_click = await analyser_click_product({'data_product': data_product, 'percent_list': self.percent_list})
+            products_history.append(data_product)
+
+            need_click = await analyser_click_product(
+                {'data_product': data_product,
+                 'percent_list': self.percent_list
+                 })
 
             if not need_click:
-                print(f'\nТовар {data_product["name"]} не нуждается в действиях\n')
-
-                data_product['action'] = ''
+                # print(f'\nТовар {data_product["name"]} не нуждается в действиях\n')
 
                 continue
 
@@ -49,13 +58,19 @@ class IterProducts:
 
             data_product['action'] = action
 
-            res_action_work = await action_go({'driver': self.driver, 'product': product, 'action': action, 'data_product': data_product})
+            res_action_work = await action_go(
+                {'driver': self.driver, 'product': product, 'action': action, 'data_product': data_product})
 
             if res_action_work:
                 is_change = True
 
-            print(f'\nИзменил состояние для товара {data_product["name"]}\n')
+            print(f'\n{count_product} Изменил состояние для товара ({action}) {data_product["name"]}\n')
 
             continue
 
-        return is_change
+        return_dict = {
+            'is_change': is_change,
+            'products_history': products_history
+        }
+
+        return return_dict

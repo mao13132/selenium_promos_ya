@@ -17,9 +17,9 @@ FAKE_TASK_CONFIG: Dict[str, Any] = {
     "account_id": 1,  # Укажите существующий ID аккаунта в вашей БД
     "created_by_user_id": str(ADMIN),  # Telegram ID инициатора
     "parameters": {
-        "cabinet": "TexnoLine77A",
-        "cabinet_id": "210416269",
-        "percent_list": "[1, 2, 3]"
+        "cabinet": "Я.Store",
+        "cabinet_id": "216275410",
+        "percent_list": "[0, 1, 2, 3]"
     },
 }
 

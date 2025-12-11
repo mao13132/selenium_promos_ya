@@ -26,6 +26,8 @@ class StartPageWorkPromo:
         self.cabinet = settings['cabinet']
 
     async def start_work(self):
+        all_product_history = []
+
         count_page = 1
 
         while True:
@@ -48,6 +50,15 @@ class StartPageWorkPromo:
             print(f'На {count_page} странице {len(all_rows)} товаров')
 
             work_from_products = await IterProducts(self.settings).start_work(all_rows)
+
+            products_history = work_from_products.get('products_history', [])
+
+            all_product_history.extend(products_history)
+
+            is_change = work_from_products.get('is_change', False)
+
+            if is_change:
+                print(f'Необходимо сохранить')
 
             print(f'Конец страницы')
 

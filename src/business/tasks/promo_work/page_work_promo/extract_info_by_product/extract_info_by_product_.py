@@ -32,7 +32,9 @@ def _get_stocks(product):
     for _try in range(3):
         try:
             stocks = product.find_element(by=By.XPATH,
-                                          value=f".//*[contains(@data-e2e, 'stock-total-count')]").text
+                                          value=f".//*[contains(@data-e2e, 'stock-total-count')] | "
+                                                f".//*[contains(@*[starts-with(name(), 'data-e2e')], 'stock') and  "
+                                                f"contains(@*[starts-with(name(), 'data-e2e')], 'empty')]").text
         except:
             time.sleep(1)
 
@@ -120,6 +122,8 @@ def _get_percent(product):
 
 
 async def extract_info_by_product(settings):
+    count_product = settings['count_product']
+
     product = settings['product']
 
     select = get_state_select(product)
@@ -137,6 +141,7 @@ async def extract_info_by_product(settings):
     old_price = _get_old_salle(product)
 
     return_product_data = {
+        'count_product': count_product,
         'select': select,
         'name': name,
         'stocks': stocks,
@@ -144,6 +149,7 @@ async def extract_info_by_product(settings):
         'price_salle': price_salle,
         'percent': percent,
         'old_price': old_price,
+        'action': '',
     }
 
     return return_product_data
