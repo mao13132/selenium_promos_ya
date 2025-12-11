@@ -31,6 +31,8 @@ def _click_go_promo_btn(driver):
 async def go_promos_page(settings):
     driver = settings['driver']
 
+    name_promo = settings['name_promo']
+
     is_open = await open_popup_promo(settings)
 
     if not is_open:
@@ -53,7 +55,7 @@ async def go_promos_page(settings):
 
         return True
 
-    error_ = f'Не смог зайти в акцию'
+    error_ = f'Не смог зайти в акцию {name_promo}'
 
     logger_msg(error_)
 

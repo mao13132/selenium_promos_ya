@@ -62,7 +62,11 @@ class IterPromos:
 
                 continue
 
-            is_good_load = await go_promos_page({'driver': self.driver, 'promo': promo, 'cabinet': self.cabinet})
+            is_good_load = await go_promos_page(
+                {'driver': self.driver,
+                 'promo': promo,
+                 'cabinet': self.cabinet,
+                 'name_promo': name_promo})
 
             if not is_good_load:
                 continue

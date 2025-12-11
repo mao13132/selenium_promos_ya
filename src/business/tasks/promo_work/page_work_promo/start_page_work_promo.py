@@ -9,6 +9,7 @@
 import asyncio
 
 from src.business.pagination_work.start_pagination_work import next_page_btn
+from src.business.save_changes.start_save_changes import save_changes
 from src.business.tasks.promo_work.page_work_promo.end_scroll_page.end_scroll_page_ import is_end_scroll_page
 from src.business.tasks.promo_work.page_work_promo.get_all_products_rows.get_all_products_rows_ import \
     get_all_products_rows
@@ -38,7 +39,7 @@ class StartPageWorkPromo:
 
             # Листаю в самый низ, пока не долистаю в самый низ
             if not is_end_page:
-                self.driver.execute_script("window.scrollBy(0, 150);")
+                self.driver.execute_script("window.scrollBy(0, 200);")
 
                 await asyncio.sleep(1)
 
@@ -58,7 +59,9 @@ class StartPageWorkPromo:
             is_change = work_from_products.get('is_change', False)
 
             if is_change:
-                print(f'Необходимо сохранить')
+                res_ = await save_changes(self.settings)
+
+            print(f'Конец страницы {count_page}')
 
             next_page = await next_page_btn(self.settings)
 
@@ -66,8 +69,6 @@ class StartPageWorkPromo:
                 print(f'Работа по акции закончена. Все страницы обработаны')
 
                 return all_product_history
-
-            print(f'Конец страницы {count_page}')
 
             count_page += 1
 

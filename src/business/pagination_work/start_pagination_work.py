@@ -32,7 +32,7 @@ async def next_page_btn(settings):
 
         # Если не кликается, то значит кнопки нет
         if not res_click:
-            return True
+            return False
 
         await asyncio.sleep(2)
 
