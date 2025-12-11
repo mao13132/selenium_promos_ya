@@ -39,6 +39,6 @@ class StartGetCurrentPromos:
 
         self.settings['data_promo'] = data_promo
 
-        res_iter = await IterPromos(self.settings).start_work()
+        products_data = await IterPromos(self.settings).start_work()
 
-        print()
+        return products_data

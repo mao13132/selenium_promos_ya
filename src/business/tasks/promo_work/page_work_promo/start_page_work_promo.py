@@ -8,6 +8,7 @@
 # ---------------------------------------------
 import asyncio
 
+from src.business.pagination_work.start_pagination_work import StartPagination
 from src.business.tasks.promo_work.page_work_promo.end_scroll_page.end_scroll_page_ import is_end_scroll_page
 from src.business.tasks.promo_work.page_work_promo.get_all_products_rows.get_all_products_rows_ import \
     get_all_products_rows
@@ -42,7 +43,6 @@ class StartPageWorkPromo:
                 continue
 
             # В самом низу страницы
-
             await asyncio.sleep(3)
 
             all_rows = await get_all_products_rows(self.settings)
@@ -60,10 +60,19 @@ class StartPageWorkPromo:
             if is_change:
                 print(f'Необходимо сохранить')
 
-            print(f'Конец страницы')
+            next_page = await StartPagination(self.settings).start_work()
 
-            print()
+            if not next_page:
+                print(f'Работа по акции закончена. Все страницы обработаны')
 
-        print()
+                return all_product_history
+
+            print(f'Конец страницы {count_page}')
+
+            count_page += 1
+
+            continue
+
+        return all_product_history
 
 

@@ -29,6 +29,6 @@ class StartPromoLogic:
 
             raise Exception(error_)
 
-        promos = await StartGetCurrentPromos(self.settings).start_work()
+        products_data = await StartGetCurrentPromos(self.settings).start_work()
 
-        print()
+        print(f'Сохранить в Excel и выслать админам')

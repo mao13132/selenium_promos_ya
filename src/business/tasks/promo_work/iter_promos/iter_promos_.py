@@ -31,6 +31,8 @@ class IterPromos:
     async def start_work(self):
         promo_url = self.driver.current_url
 
+        full_products_all_promos = {}
+
         for count_promo, promo in enumerate(self.promos):
             name_promo = self.data_promo.get(count_promo, '')
 
@@ -65,8 +67,13 @@ class IterPromos:
             if not is_good_load:
                 continue
 
-            res_work = await StartPageWorkPromo(self.settings).start_work()
+            product_history_from_promo = await StartPageWorkPromo(self.settings).start_work()
 
-            print()
+            full_products_all_promos[count_promo] = {
+                'name': name_promo,
+                'products': product_history_from_promo
+            }
 
-        print()
+            continue
+
+        return full_products_all_promos
