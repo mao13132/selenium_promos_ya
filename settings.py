@@ -31,6 +31,8 @@ NAME_PRODUCT = f'Анализатор Yandex Акций'
 
 SITE_WORK = 'https://partner.market.yandex.ru/main-redirect'
 
+WAIT_PRODUCT_TABLE_XPATH = f"//span[contains(text(), 'Цена по')]"
+
 # Не создавать браузер
 NO_CREATE_BROWSER = False
 

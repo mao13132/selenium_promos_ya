@@ -8,6 +8,7 @@
 # ---------------------------------------------
 import asyncio
 
+from settings import WAIT_PRODUCT_TABLE_XPATH
 from src.business.tasks.promo_work.iter_promos._open_popup_promo import open_popup_promo
 
 from selenium.webdriver.common.by import By
@@ -43,7 +44,7 @@ async def go_promos_page(settings):
 
             continue
 
-        good_load = wait_load_cabinet(driver, f"//span[contains(text(), 'Цена по')]", count=120)
+        good_load = wait_load_cabinet(driver, WAIT_PRODUCT_TABLE_XPATH, count=120)
 
         if not good_load:
             await asyncio.sleep(1)

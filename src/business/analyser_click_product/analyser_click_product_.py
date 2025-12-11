@@ -11,8 +11,8 @@ async def analyser_click_product(settings):
 
     percent_list = settings['percent_list']
 
-    # Если процент подходящий и продукт не отмечен, то нужно включить
-    if data_product['percent'] in percent_list and not data_product['select']:
+    # Если процент подходящий и продукт не отмечен + есть остатки, то нужно включить
+    if data_product['percent'] in percent_list and not data_product['select'] and data_product['stocks']:
         return {'action': 'enable'}
 
     # Если процент не подходящий, но товар отмечен, то нужно выключить
