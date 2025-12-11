@@ -21,6 +21,8 @@ load_dotenv(dotenv_path)
 
 ADMIN = 1422194909
 
+ADMINS_REPORT = ['1422194909']
+
 TOKEN = os.getenv('TOKEN')
 
 SQL_URL = os.getenv('SQL_URL')
