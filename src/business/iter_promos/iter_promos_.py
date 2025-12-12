@@ -8,9 +8,10 @@
 # ---------------------------------------------
 import asyncio
 
+from src.business.excel.start_excel_work import start_excel_work
 from src.business.tasks.promo_work.get_active_promos.get_active_promos_ import get_active_promos
 from src.business.tasks.promo_work.go_promo_page.go_promo_page_ import go_promo_page
-from src.business.tasks.promo_work.iter_promos._go_promos_page import go_promos_page
+from src.business.iter_promos._go_promos_page import go_promos_page
 from src.business.tasks.promo_work.page_work_promo.start_page_work_promo import StartPageWorkPromo
 from src.utils._logger import logger_msg
 from src.utils.utils_decorators import catch_and_report
@@ -72,6 +73,23 @@ class IterPromos:
                 continue
 
             product_history_from_promo = await StartPageWorkPromo(self.settings).start_work()
+
+            if product_history_from_promo and len(product_history_from_promo) > 0:
+                try:
+                    await start_excel_work({
+                        'products_data': [
+                            {
+                                'name': name_promo,
+                                'products': product_history_from_promo
+                            }
+                        ],
+                        'cabinet': self.cabinet
+                    })
+                except Exception as es:
+                    logger_msg(f'Ошибка формирования/отправки отчёта для акции "{name_promo}": {es}')
+
+                # очищаем список после отправки
+                product_history_from_promo.clear()
 
             full_products_all_promos[count_promo] = {
                 'name': name_promo,

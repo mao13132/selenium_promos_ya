@@ -10,7 +10,7 @@ from src.business.action_go.action_go_ import action_go
 from src.business.analyser_click_product.analyser_click_product_ import analyser_click_product
 from src.business.tasks.promo_work.page_work_promo.extract_info_by_product.extract_info_by_product_ import \
     extract_info_by_product
-from src.business.tasks.promo_work.page_work_promo.iter_products.activate_element_ import activate_element
+from src.business.iter_products.activate_element_ import activate_element
 
 
 class IterProducts:
@@ -49,7 +49,6 @@ class IterProducts:
                  })
 
             if not need_click:
-                # print(f'\nТовар {data_product["name"]} не нуждается в действиях\n')
 
                 continue
 

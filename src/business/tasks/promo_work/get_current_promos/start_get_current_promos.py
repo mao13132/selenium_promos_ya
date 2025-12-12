@@ -9,7 +9,7 @@
 from src.business.tasks.promo_work.extract_info_by_promo.extract_info_by_promo_ import extract_info_by_promo
 from src.business.tasks.promo_work.get_active_promos.get_active_promos_ import get_active_promos
 from src.business.tasks.promo_work.get_today_date.get_today_date_ import get_today_date
-from src.business.tasks.promo_work.iter_promos.iter_promos_ import IterPromos
+from src.business.iter_promos.iter_promos_ import IterPromos
 
 
 class StartGetCurrentPromos:

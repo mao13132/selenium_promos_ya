@@ -27,7 +27,7 @@ TOKEN = os.getenv('TOKEN')
 
 SQL_URL = os.getenv('SQL_URL')
 
-CHROME_PROFILE = f'promos_ya'
+CHROME_PROFILE = f'ya_ruslan'
 
 NAME_PRODUCT = f'Анализатор Yandex Акций'
 

@@ -9,7 +9,7 @@
 import asyncio
 
 from settings import WAIT_PRODUCT_TABLE_XPATH
-from src.business.tasks.promo_work.iter_promos._open_popup_promo import open_popup_promo
+from src.business.iter_promos._open_popup_promo import open_popup_promo
 
 from selenium.webdriver.common.by import By
 

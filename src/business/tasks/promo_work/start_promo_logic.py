@@ -6,7 +6,6 @@
 # 1.0       2023    Initial Version
 #
 # ---------------------------------------------
-from src.business.excel.start_excel_work import start_excel_work
 from src.business.tasks.promo_work.get_current_promos.start_get_current_promos import StartGetCurrentPromos
 from src.business.tasks.promo_work.to_go_promo_page.start_to_go_promo_page_ import to_go_promo_page
 
@@ -30,8 +29,6 @@ class StartPromoLogic:
 
             raise Exception(error_)
 
-        products_data = await StartGetCurrentPromos(self.settings).start_work()
+        await StartGetCurrentPromos(self.settings).start_work()
 
-        res_excel_work = await start_excel_work({'products_data': products_data, 'cabinet': self.cabinet})
-
-        print(f'Сохранить в Excel и выслать админам')
+        return True
