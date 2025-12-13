@@ -43,3 +43,5 @@ MOKE_EDIT_TASK = False
 
 # Не ожидать, а запускать задачу по promo
 MOKE_START_WORK = False
+
+TIME_KEY_SCHEDULE = 'schedule_minutes'
