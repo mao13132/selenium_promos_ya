@@ -13,6 +13,7 @@ from selenium.webdriver.common.by import By
 from src.business.full_load.full_load import full_load
 from src.business.tasks.promo_work.load_more.load_more_ import load_more
 from src.business.tasks.promo_work.to_go_promo_page.wait_load_cabinet_ import wait_load_cabinet
+from src.utils.telegram_debug import SendlerOneCreate
 
 
 async def _click_by_cabinet(driver, cabinet):
@@ -62,6 +63,8 @@ async def click_by_cabinet(settings):
 
         return is_success
 
-    error_ = f'Кончились попытки зайти на страницу кабинета'
+    error_ = f'Кончились попытки зайти на страницу кабинета "{cabinet_id}". Проверьте название в аккаунте'
+
+    SendlerOneCreate('').save_text(error_)
 
     raise Exception(error_)
