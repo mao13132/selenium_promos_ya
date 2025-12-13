@@ -94,7 +94,7 @@ async def start_excel_work(settings):
     }
 
     def to_state(select_val):
-        return 'Галочка стоит' if bool(select_val) else 'Галочки нет'
+        return '✅' if bool(select_val) else '❌'
 
     def to_action_fields(action_val):
         if not action_val:

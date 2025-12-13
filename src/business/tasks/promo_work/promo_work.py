@@ -49,7 +49,7 @@ class PromoWork:
 
         cabinet = other_params.get('cabinet', False)
 
-        cabinet_id = other_params.get('cabinet_id', False)
+        cabinet_id = other_params.get('cabinet', False)
 
         percent_list = other_params.get('percent_list', '[]')
 

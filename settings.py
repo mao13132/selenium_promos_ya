@@ -39,7 +39,7 @@ WAIT_PRODUCT_TABLE_XPATH = f"//span[contains(text(), 'Цена по')]"
 NO_CREATE_BROWSER = False
 
 # Не менять состояние задач
-MOKE_EDIT_TASK = True
+MOKE_EDIT_TASK = False
 
 # Не ожидать, а запускать задачу по promo
-MOKE_START_WORK = True
+MOKE_START_WORK = False
