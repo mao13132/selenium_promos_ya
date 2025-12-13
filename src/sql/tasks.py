@@ -40,9 +40,8 @@ class Tasks(Base):
 
     # Тип задачи (для определения какой алгоритм использовать)
     task_type = Column(String(100), nullable=False, comment="Тип задачи для выбора алгоритма")
-
-    account_id = Column(Integer, ForeignKey('accounts.id_pk'), nullable=True,
-                        comment="ID аккаунта для выполнения задачи")
+    shop_id = Column(Integer, ForeignKey('shops.id_pk'), nullable=True,
+                     comment="ID магазина для выполнения задачи")
 
     # Статус задачи
     status = Column(String(20), nullable=False, default=TaskStatus.PENDING, comment="Статус выполнения задачи")
@@ -428,42 +427,42 @@ class TasksCRUD:
             'is_active': True
         })
 
-    async def get_tasks_by_account(self, account_id: int) -> List[Tasks]:
+    async def get_tasks_by_shop(self, shop_id: int) -> List[Tasks]:
         """
-        Получение задач по ID аккаунта
+        Получение задач по ID магазина
         
         Args:
-            account_id: ID аккаунта
+            shop_id: ID магазина
             
         Returns:
-            Список задач для указанного аккаунта
+            Список задач для указанного магазина
         """
         return await self.read_by_filter({
-            'account_id': account_id,
+            'shop_id': shop_id,
             'is_active': True
         })
 
-    async def assign_task_to_account(self, task_id: int, account_id: int) -> bool:
+    async def assign_task_to_shop(self, task_id: int, shop_id: int) -> bool:
         """
-        Назначение задачи на аккаунт
+        Назначение задачи на магазин
         
         Args:
             task_id: ID задачи
-            account_id: ID аккаунта
+            shop_id: ID магазина
             
         Returns:
             True при успехе, False при ошибке
         """
-        return await self.update_by_id(task_id, {'account_id': account_id})
+        return await self.update_by_id(task_id, {'shop_id': shop_id})
 
     async def get_unassigned_tasks(self) -> List[Tasks]:
         """
-        Получение задач без назначенного аккаунта
+        Получение задач без назначенного магазина
         
         Returns:
-            Список задач без назначенного аккаунта
+            Список задач без назначенного магазина
         """
         return await self.read_by_filter({
-            'account_id': None,
+            'shop_id': None,
             'is_active': True
         })

@@ -17,7 +17,7 @@ from src.business.check_auth.start_check_auth import StartCheckAuth
 from src.business.tasks.promo_work.start_promo_logic import StartPromoLogic
 from src.utils._logger import logger_msg
 from src.utils.telegram_debug import SendlerOneCreate
-from src.business.fake_task.fake_account_data import build_fake_account
+from src.sql.shops import Shops
 
 
 class PromoWork:
@@ -37,11 +37,13 @@ class PromoWork:
         self.settings['id_client'] = id_client
 
         if MOKE_START_WORK:
-            data_account = build_fake_account(task.account_id)
+            data_shop = Shops()
+            data_shop.id_pk = getattr(task, 'shop_id', 1)
+            data_shop.name = "Тестовый Магазин"
         else:
-            data_account = await self.BotDB.accounts.read_by_id(task.account_id)
+            data_shop = await self.BotDB.shops.read_by_id(task.shop_id)
 
-        self.settings['data_account'] = data_account
+        self.settings['data_account'] = data_shop
 
         other_params = json.loads(task.parameters)
 
@@ -60,7 +62,7 @@ class PromoWork:
         with get_browser_and_close(self.path_chrome, self.chrome_profile, self.path_short_chrome) as browser:
             if not browser or not browser.driver:
                 error_ = (f'❌ Задача с типом {task.task_type} (ID: {task.id_pk}) '
-                          f'у аккаунта {data_account.name} (<code>ID: {data_account.id_pk}</code>) <b>завершилась с ошибкой</b>. '
+                          f'у магазина {data_shop.name} (<code>ID: {data_shop.id_pk}</code>) <b>завершилась с ошибкой</b>. '
                           f'Причина: не могу создать браузер')
 
                 logger_msg(error_)

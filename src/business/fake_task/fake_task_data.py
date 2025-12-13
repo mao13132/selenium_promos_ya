@@ -14,7 +14,7 @@ FAKE_TASK_CONFIG: Dict[str, Any] = {
     "title": "Фейковая задача изменения промо",
     "description": "Запуск процесса change_promo без записи в БД",
     "task_type": "change_promo",  # Должен совпадать с зарегистрированным обработчиком
-    "account_id": 1,  # Укажите существующий ID аккаунта в вашей БД
+    "shop_id": 1,  # Укажите существующий ID магазина в вашей БД
     "created_by_user_id": str(ADMIN),  # Telegram ID инициатора
     "parameters": {
         "cabinet": "Я.Store",
@@ -33,7 +33,7 @@ def build_fake_task() -> Tasks:
     task.title = cfg["title"]
     task.description = cfg["description"]
     task.task_type = cfg["task_type"]
-    task.account_id = cfg["account_id"]
+    task.shop_id = cfg["shop_id"]
     task.status = TaskStatus.PENDING
     task.result = None
     task.error_message = None

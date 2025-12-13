@@ -15,7 +15,6 @@ class StartPromoLogic:
         self.settings = settings
         self.driver = settings['driver']
         self.task = settings['task']
-        self.data_account = settings['data_account']
         self.id_client = settings['id_client']
         self.cabinet = settings['cabinet']
 

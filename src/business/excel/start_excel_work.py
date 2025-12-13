@@ -8,6 +8,7 @@
 # ---------------------------------------------
 from datetime import datetime
 import os
+import json
 
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment
@@ -92,10 +93,10 @@ async def start_excel_work(settings):
         'remove_percent': 'снятие скидки'
     }
 
-    def to_state(select_val: bool) -> str:
+    def to_state(select_val):
         return 'Галочка стоит' if bool(select_val) else 'Галочки нет'
 
-    def to_action_fields(action_val: str) -> tuple[str, str]:
+    def to_action_fields(action_val):
         if not action_val:
             return 'Нет', ''
         # Пытаемся перевести известный код действия на русский
@@ -160,16 +161,85 @@ async def start_excel_work(settings):
     # Сохраняем файл
     wb.save(excel_path)
 
-    # Отправляем отчёт всем администраторам
+    # Отправляем отчёт админам и менеджерам (менеджеры из БД settings)
     try:
         caption = f'Отчёт по акциям: кабинет "{cabinet}" — {ts}'
         sender = SendlerOneCreate(None)
-        for admin_id in ADMINS_REPORT:
-            # поддержка числовых и строковых chat_id
-            _id = str(admin_id)
-            sender.send_file_to_id(excel_path, _id, caption)
+
+        recipients = []
+        for admin_id in ADMINS_REPORT or []:
+            try:
+                recipients.append(str(admin_id).strip())
+            except Exception:
+                pass
+
+        async def _get_managers_from_db():
+            ids = []
+            BotDB = settings.get('BotDB')
+            if not BotDB:
+                return ids
+            possible_keys = ['MANAGERS_REPORT', 'managers_report', 'REPORT_MANAGERS', 'MANAGERS']
+            for key in possible_keys:
+                try:
+                    raw = await BotDB.settings.get_setting(key)
+                except Exception:
+                    raw = False
+                if not raw:
+                    continue
+                data = None
+                try:
+                    data = json.loads(raw)
+                except Exception:
+                    data = raw
+                try:
+                    if isinstance(data, dict):
+                        for k, v in data.items():
+                            if isinstance(v, dict):
+                                cid = str(v.get('chat_id', '')).strip()
+                            else:
+                                cid = str(v).strip()
+                            if cid:
+                                ids.append(cid)
+                    elif isinstance(data, list):
+                        for item in data:
+                            if isinstance(item, dict):
+                                cid = str(item.get('chat_id', '')).strip()
+                            else:
+                                cid = str(item).strip()
+                            if cid:
+                                ids.append(cid)
+                    elif isinstance(data, str):
+                        for part in data.split(','):
+                            cid = str(part).strip()
+                            if cid:
+                                ids.append(cid)
+                except Exception:
+                    pass
+                if ids:
+                    break
+            unique = []
+            seen = set()
+            for cid in ids:
+                if not cid:
+                    continue
+                if cid not in seen:
+                    seen.add(cid)
+                    unique.append(cid)
+            return unique
+
+        try:
+            managers_ids = await _get_managers_from_db()
+        except Exception:
+            managers_ids = []
+
+        for mid in managers_ids:
+            recipients.append(str(mid).strip())
+
+        for chat_id in recipients:
+            if not chat_id:
+                continue
+            sender.send_file_to_id(excel_path, chat_id, caption)
     except Exception as es:
-        # Логируем, но возвращаем путь к файлу, чтобы не терять результат
         from src.utils._logger import logger_msg
         logger_msg(f'Ошибка отправки Excel в телеграм: {es}')
 

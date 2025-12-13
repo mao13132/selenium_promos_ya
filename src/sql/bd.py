@@ -10,7 +10,8 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
 from settings import SQL_URL, Base
-from src.sql.accounts import AccountsCRUD
+from src.sql.settings_table import SettingsCRUD
+from src.sql.shops import ShopsCRUD
 from src.sql.tasks import TasksCRUD, Tasks
 
 from src.utils._logger import logger_msg
@@ -35,10 +36,12 @@ class BotDB:
 
             # Создаём сессию
             self.async_session_maker = sessionmaker(self.engine, **self.params)
-
-            self.accounts = AccountsCRUD(self.async_session_maker)
+            
+            self.settings = SettingsCRUD(self.async_session_maker)
 
             self.tasks = TasksCRUD(self.async_session_maker)
+
+            self.shops = ShopsCRUD(self.async_session_maker)
 
         except Exception as es:
             error_ = f'SQL не могу создать подключение "{es}"'
