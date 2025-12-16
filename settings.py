@@ -42,6 +42,6 @@ NO_CREATE_BROWSER = False
 MOKE_EDIT_TASK = False
 
 # Не ожидать, а запускать задачу по promo
-MOKE_START_WORK = False
+MOKE_START_WORK = True
 
 TIME_KEY_SCHEDULE = 'schedule_minutes'

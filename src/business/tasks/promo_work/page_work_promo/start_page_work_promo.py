@@ -10,6 +10,7 @@ import asyncio
 
 from src.business.pagination_work.start_pagination_work import next_page_btn
 from src.business.save_changes.start_save_changes import save_changes
+from src.business.tasks.promo_work.change_count_for_page.change_count_for_page_ import change_count_for_page
 from src.business.tasks.promo_work.page_work_promo.end_scroll_page.end_scroll_page_ import is_end_scroll_page
 from src.business.tasks.promo_work.page_work_promo.get_all_products_rows.get_all_products_rows_ import \
     get_all_products_rows
@@ -36,20 +37,7 @@ class StartPageWorkPromo:
         print(f'Пролистываю страницу с товарами для их подгрузки')
 
         while True:
-            is_end_page = is_end_scroll_page(self.driver)
-
-            # Листаю в самый низ, пока не долистаю в самый низ
-            if not is_end_page:
-                self.driver.execute_script("window.scrollBy(0, 200);")
-
-                await asyncio.sleep(1)
-
-                count_scroll += 1
-
-                continue
-
-            # В самом низу страницы
-            await asyncio.sleep(3)
+            res_change = await change_count_for_page({'driver': self.driver})
 
             all_rows = await get_all_products_rows(self.settings)
 
