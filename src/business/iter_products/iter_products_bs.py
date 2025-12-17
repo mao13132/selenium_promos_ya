@@ -21,6 +21,7 @@ class IterProductsBS:
     async def start_work(self, html, rows):
         products_history = []
         is_change = False
+        changes_count = 0
 
         products_data = extract_info_list_by_html(html)
         to_click = []
@@ -55,8 +56,10 @@ class IterProductsBS:
             )
             if res_action_work:
                 is_change = True
+                changes_count += 1
 
         return {
             "is_change": is_change,
             "products_history": products_history,
+            "changes_count": changes_count,
         }

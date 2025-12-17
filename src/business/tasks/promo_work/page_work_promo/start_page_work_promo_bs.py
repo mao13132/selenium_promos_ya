@@ -21,6 +21,7 @@ class StartPageWorkPromoBS:
     async def start_work(self):
         all_product_history = []
         count_page = 1
+        total_changes_count = 0
 
         while True:
             await change_count_for_page({"driver": self.driver})
@@ -31,14 +32,22 @@ class StartPageWorkPromoBS:
             products_history = work_from_products.get("products_history", [])
             all_product_history.extend(products_history)
             is_change = work_from_products.get("is_change", False)
+            changes_count = work_from_products.get("changes_count", 0)
+            total_changes_count += changes_count
 
             if is_change:
                 await save_changes(self.settings)
 
             next_page = await next_page_btn(self.settings)
             if not next_page:
-                return all_product_history
+                return {
+                    "products_history": all_product_history,
+                    "changes_count": total_changes_count,
+                }
             count_page += 1
             continue
 
-        return all_product_history
+        return {
+            "products_history": all_product_history,
+            "changes_count": total_changes_count,
+        }

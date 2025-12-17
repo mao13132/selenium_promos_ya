@@ -28,6 +28,7 @@ class IterProducts:
         products_history = []
 
         is_change = False
+        changes_count = 0
 
         for count_product, product in enumerate(products):
             activate_element(self.driver, product)
@@ -61,6 +62,7 @@ class IterProducts:
 
             if res_action_work:
                 is_change = True
+                changes_count += 1
 
             print(f'\n{count_product} Изменил состояние для товара ({action}) {data_product["name"]}\n')
 
@@ -68,7 +70,8 @@ class IterProducts:
 
         return_dict = {
             'is_change': is_change,
-            'products_history': products_history
+            'products_history': products_history,
+            'changes_count': changes_count
         }
 
         return return_dict

@@ -31,6 +31,7 @@ class StartPageWorkPromo:
         count_page = 1
 
         count_scroll = 0
+        total_changes_count = 0
 
         print(f'Пролистываю страницу с товарами для их подгрузки')
 
@@ -46,6 +47,8 @@ class StartPageWorkPromo:
             all_product_history.extend(products_history)
 
             is_change = work_from_products.get('is_change', False)
+            changes_count = work_from_products.get('changes_count', 0)
+            total_changes_count += changes_count
 
             if is_change:
                 res_ = await save_changes(self.settings)
@@ -57,10 +60,16 @@ class StartPageWorkPromo:
             if not next_page:
                 print(f'Работа по акции закончена. Все страницы обработаны')
 
-                return all_product_history
+                return {
+                    'products_history': all_product_history,
+                    'changes_count': total_changes_count
+                }
 
             count_page += 1
 
             continue
 
-        return all_product_history
+        return {
+            'products_history': all_product_history,
+            'changes_count': total_changes_count
+        }

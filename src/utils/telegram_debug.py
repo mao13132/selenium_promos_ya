@@ -52,7 +52,7 @@ class SendlerOneCreate:
         try:
             with open(file, 'rb') as file_in:
                 open_files = {'document': file_in}
-                data = {'chat_id': str(self.ADMIN_TELEGRAM), 'caption': str(text_)}
+                data = {'chat_id': str(self.ADMIN_TELEGRAM), 'caption': str(text_), 'parse_mode': 'HTML'}
                 response = requests.post(url_req, files=open_files, data=data, timeout=60)
                 response.raise_for_status()
         except Exception as es:
@@ -69,7 +69,7 @@ class SendlerOneCreate:
         try:
             with open(file, 'rb') as file_in:
                 open_files = {'document': file_in}
-                data = {'chat_id': str(id_user), 'caption': str(text_)}
+                data = {'chat_id': str(id_user), 'caption': str(text_), 'parse_mode': 'HTML'}
                 response = requests.post(url_req, files=open_files, data=data, timeout=60)
                 response.raise_for_status()
         except Exception as es:

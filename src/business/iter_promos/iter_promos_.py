@@ -76,9 +76,11 @@ class IterPromos:
                 continue
 
             if BS4_PARSING:
-                product_history_from_promo = await StartPageWorkPromoBS(self.settings).start_work()
+                promo_result = await StartPageWorkPromoBS(self.settings).start_work()
             else:
-                product_history_from_promo = await StartPageWorkPromo(self.settings).start_work()
+                promo_result = await StartPageWorkPromo(self.settings).start_work()
+            product_history_from_promo = promo_result.get('products_history', []) or []
+            changes_count = promo_result.get('changes_count', 0)
 
             elapsed_sec = time.perf_counter() - t_start
             print(f'Акция "{name_promo}" обработана за {elapsed_sec:.2f} сек')
@@ -94,7 +96,8 @@ class IterPromos:
                         ],
                         'cabinet': self.cabinet,
                         'promo_name': name_promo,
-                        'promo_time_sec': elapsed_sec
+                        'promo_time_sec': elapsed_sec,
+                        'promo_changes_count': changes_count
                     })
                 except Exception as es:
                     logger_msg(f'Ошибка формирования/отправки отчёта для акции "{name_promo}": {es}')
@@ -104,7 +107,8 @@ class IterPromos:
 
             full_products_all_promos[count_promo] = {
                 'name': name_promo,
-                'products': product_history_from_promo
+                'products': product_history_from_promo,
+                'changes_count': changes_count
             }
 
             continue

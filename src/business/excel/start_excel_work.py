@@ -56,6 +56,7 @@ async def start_excel_work(settings):
 
     promo_name = settings.get('promo_name', '')
     promo_time_sec = settings.get('promo_time_sec', None)
+    promo_changes_count = settings.get('promo_changes_count', None)
 
     def _fmt_duration(sec):
         try:
@@ -94,6 +95,8 @@ async def start_excel_work(settings):
         cell = ws.cell(row=1, column=col_idx)
         cell.font = bold
         cell.alignment = center
+
+    total_products_count = 0
 
     # Простейшая мапа для перевода action на русский (расширяется при необходимости)
     action_map = {
@@ -157,6 +160,7 @@ async def start_excel_work(settings):
                 old_price,
                 catalog_price,
             ])
+            total_products_count += 1
 
     # Автоширина столбцов по максимальной длине
     for col in ws.columns:
@@ -175,14 +179,21 @@ async def start_excel_work(settings):
 
     # Отправляем отчёт админам и менеджерам (менеджеры из БД settings)
     try:
-        caption = f'Отчёт по акциям: кабинет "{cabinet}" — {ts}'
-        extra = []
+        caption_lines = []
+        caption_lines.append('📊 <b>Отчёт по акциям</b>')
+        caption_lines.append(f'🏢 Кабинет: <code>{cabinet}</code>')
         if promo_name:
-            extra.append(f'Акция: "{promo_name}"')
+            caption_lines.append(f'🎯 Акция: <b>{promo_name}</b>')
+        caption_lines.append(f'🗓️ Дата: <code>{ts}</code>')
         if promo_time_sec is not None:
-            extra.append(f'Время обработки: {_fmt_duration(promo_time_sec)}')
-        if extra:
-            caption = f'{caption}\n' + ' — '.join(extra)
+            caption_lines.append(f'⏱️ Обработка: <code>{_fmt_duration(promo_time_sec)}</code>')
+        caption_lines.append(f'📦 Товаров: <b>{total_products_count}</b>')
+        if promo_changes_count is not None:
+            try:
+                caption_lines.append(f'🛠️ Изменений: <b>{int(promo_changes_count)}</b>')
+            except Exception:
+                caption_lines.append(f'🛠️ Изменений: <b>{promo_changes_count}</b>')
+        caption = '\n'.join(caption_lines)
         sender = SendlerOneCreate(None)
 
         recipients = []
