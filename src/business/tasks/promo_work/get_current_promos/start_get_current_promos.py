@@ -10,6 +10,7 @@ from src.business.tasks.promo_work.extract_info_by_promo.extract_info_by_promo_ 
 from src.business.tasks.promo_work.get_active_promos.get_active_promos_ import get_active_promos
 from src.business.tasks.promo_work.get_today_date.get_today_date_ import get_today_date
 from src.business.iter_promos.iter_promos_ import IterPromos
+from src.utils.utils_decorators import catch_and_report
 
 
 class StartGetCurrentPromos:
@@ -20,6 +21,7 @@ class StartGetCurrentPromos:
         self.id_client = settings['id_client']
         self.cabinet = settings['cabinet']
 
+    @catch_and_report('StartGetCurrentPromos')
     async def start_work(self):
         date_today = await get_today_date({'driver': self.driver})
 

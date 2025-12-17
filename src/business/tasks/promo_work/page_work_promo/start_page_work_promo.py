@@ -6,12 +6,10 @@
 # 1.0       2023    Initial Version
 #
 # ---------------------------------------------
-import asyncio
 
 from src.business.pagination_work.start_pagination_work import next_page_btn
 from src.business.save_changes.start_save_changes import save_changes
 from src.business.tasks.promo_work.change_count_for_page.change_count_for_page_ import change_count_for_page
-from src.business.tasks.promo_work.page_work_promo.end_scroll_page.end_scroll_page_ import is_end_scroll_page
 from src.business.tasks.promo_work.page_work_promo.get_all_products_rows.get_all_products_rows_ import \
     get_all_products_rows
 from src.business.iter_products.iter_products_ import IterProducts
@@ -66,5 +64,3 @@ class StartPageWorkPromo:
             continue
 
         return all_product_history
-
-

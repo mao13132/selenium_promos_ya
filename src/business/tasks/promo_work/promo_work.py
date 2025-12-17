@@ -18,6 +18,7 @@ from src.business.tasks.promo_work.start_promo_logic import StartPromoLogic
 from src.utils._logger import logger_msg
 from src.utils.telegram_debug import SendlerOneCreate
 from src.sql.shops import Shops
+from src.utils.utils_decorators import catch_and_report
 
 
 class PromoWork:
@@ -29,6 +30,7 @@ class PromoWork:
         self.path_chrome = f"{PATCH_PROFILES}{CHROME_PROFILE}"
         self.path_short_chrome = PATCH_PROFILES
 
+    @catch_and_report(f'PromoWork')
     async def start_work(self, task):
         self.settings['mode'] = self.mode
 

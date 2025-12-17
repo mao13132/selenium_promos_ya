@@ -8,6 +8,7 @@
 # ---------------------------------------------
 from src.business.tasks.promo_work.get_current_promos.start_get_current_promos import StartGetCurrentPromos
 from src.business.tasks.promo_work.to_go_promo_page.start_to_go_promo_page_ import to_go_promo_page
+from src.utils.utils_decorators import catch_and_report
 
 
 class StartPromoLogic:
@@ -18,6 +19,7 @@ class StartPromoLogic:
         self.id_client = settings['id_client']
         self.cabinet = settings['cabinet']
 
+    @catch_and_report('StartPromoLogic')
     async def start_logic(self):
         print(f'Захожу в Yandex Partner в кабинет "{self.cabinet}" для работы')
 

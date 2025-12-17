@@ -7,12 +7,15 @@
 #
 # ---------------------------------------------
 import asyncio
+import time
 
+from settings import BS4_PARSING
 from src.business.excel.start_excel_work import start_excel_work
 from src.business.tasks.promo_work.get_active_promos.get_active_promos_ import get_active_promos
 from src.business.tasks.promo_work.go_promo_page.go_promo_page_ import go_promo_page
 from src.business.iter_promos._go_promos_page import go_promos_page
 from src.business.tasks.promo_work.page_work_promo.start_page_work_promo import StartPageWorkPromo
+from src.business.tasks.promo_work.page_work_promo.start_page_work_promo_bs import StartPageWorkPromoBS
 from src.utils._logger import logger_msg
 from src.utils.utils_decorators import catch_and_report
 
@@ -35,6 +38,7 @@ class IterPromos:
 
         for count_promo, promo in enumerate(self.promos):
             name_promo = self.data_promo.get(count_promo, '')
+            t_start = time.perf_counter()
 
             print(f'Начинаю заходить в акцию {name_promo}')
 
@@ -71,7 +75,13 @@ class IterPromos:
             if not is_good_load:
                 continue
 
-            product_history_from_promo = await StartPageWorkPromo(self.settings).start_work()
+            if BS4_PARSING:
+                product_history_from_promo = await StartPageWorkPromoBS(self.settings).start_work()
+            else:
+                product_history_from_promo = await StartPageWorkPromo(self.settings).start_work()
+
+            elapsed_sec = time.perf_counter() - t_start
+            print(f'Акция "{name_promo}" обработана за {elapsed_sec:.2f} сек')
 
             if product_history_from_promo and len(product_history_from_promo) > 0:
                 try:
@@ -82,7 +92,9 @@ class IterPromos:
                                 'products': product_history_from_promo
                             }
                         ],
-                        'cabinet': self.cabinet
+                        'cabinet': self.cabinet,
+                        'promo_name': name_promo,
+                        'promo_time_sec': elapsed_sec
                     })
                 except Exception as es:
                     logger_msg(f'Ошибка формирования/отправки отчёта для акции "{name_promo}": {es}')

@@ -35,6 +35,8 @@ SITE_WORK = 'https://partner.market.yandex.ru/main-redirect'
 
 WAIT_PRODUCT_TABLE_XPATH = f"//span[contains(text(), 'Цена по')]"
 
+BS4_PARSING = True
+
 # Не создавать браузер
 NO_CREATE_BROWSER = False
 

@@ -54,6 +54,18 @@ async def start_excel_work(settings):
     filename = f"promos_{cabinet}_{ts}.xlsx".replace('/', '_').replace('\\', '_')
     excel_path = os.path.join(files_dir, filename)
 
+    promo_name = settings.get('promo_name', '')
+    promo_time_sec = settings.get('promo_time_sec', None)
+
+    def _fmt_duration(sec):
+        try:
+            sec = float(sec)
+        except Exception:
+            return ''
+        m, s = divmod(int(round(sec)), 60)
+        h, m = divmod(m, 60)
+        return f'{h:02d}:{m:02d}:{s:02d}'
+
     # Создаём книгу и лист
     wb = Workbook()
     ws = wb.active
@@ -164,6 +176,13 @@ async def start_excel_work(settings):
     # Отправляем отчёт админам и менеджерам (менеджеры из БД settings)
     try:
         caption = f'Отчёт по акциям: кабинет "{cabinet}" — {ts}'
+        extra = []
+        if promo_name:
+            extra.append(f'Акция: "{promo_name}"')
+        if promo_time_sec is not None:
+            extra.append(f'Время обработки: {_fmt_duration(promo_time_sec)}')
+        if extra:
+            caption = f'{caption}\n' + ' — '.join(extra)
         sender = SendlerOneCreate(None)
 
         recipients = []

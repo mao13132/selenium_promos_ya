@@ -67,4 +67,4 @@ async def click_by_cabinet(settings):
 
     SendlerOneCreate('').save_text(error_)
 
-    raise Exception(error_)
+    return False
