@@ -82,8 +82,8 @@ async def start_excel_work(settings):
         'Скидка, %',
         'Действие было',
         'Какое действие',
-        'Цена по акции',
-        'Старая цена',
+        # 'Цена по акции',
+        # 'Старая цена',
         'Каталожная цена'
     ]
     ws.append(headers)
@@ -156,8 +156,8 @@ async def start_excel_work(settings):
                 percent,
                 action_was,
                 action_rus,
-                price_salle,
-                old_price,
+                # price_salle,
+                # old_price,
                 catalog_price,
             ])
             total_products_count += 1
