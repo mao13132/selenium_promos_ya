@@ -53,8 +53,7 @@ class TaskDispatcher:
                 await self.BotDB.tasks.complete_task(task.id_pk, str(result))
 
             msg = f"Завершена задача ID: {task.id_pk}"
-            logger_msg(msg)
-            SendlerOneCreate('').send_msg_by_id(msg, id_client)
+            print(msg)
             return True
 
         except Exception as e:
