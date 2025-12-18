@@ -36,7 +36,7 @@ async def action_go(settings):
 
     for _try in range(4):
         if _try > 0:
-            is_change_promo = start_popup_change({"driver": driver})
+            is_change_promo = await start_popup_change({"driver": driver})
 
         status_selector = get_state_select(product)
 
