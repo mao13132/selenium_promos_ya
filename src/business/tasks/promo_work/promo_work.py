@@ -96,4 +96,4 @@ class PromoWork:
 
             res_get_source = await StartPromoLogic(self.settings).start_logic()
 
-            return True
+            return res_get_source

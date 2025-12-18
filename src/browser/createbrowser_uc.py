@@ -84,7 +84,8 @@ class CreatBrowser:
         options.add_argument(f"--profile-directory=Default")
 
         experimental_options = {
-            'prefs': {'profile.default_content_setting_values.notifications': 2}
+            'prefs': {'profile.default_content_setting_values.notifications': 2,
+                      "profile.managed_default_content_settings.images": 2}
         }
 
         # отключаем копирование профиля UC

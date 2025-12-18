@@ -12,6 +12,7 @@ from selenium.webdriver.common.by import By
 
 from src.business.full_load.full_load import full_load
 from src.business.tasks.promo_work.to_go_promo_page.wait_load_cabinet_ import wait_load_cabinet
+from src.utils._logger import logger_msg
 
 
 def _click_promo_btn(driver):
@@ -63,4 +64,6 @@ async def start_go_promo_clickers(settings):
 
     error_ = f'Закончились попытки зайти на страницу акций'
 
-    raise Exception(error_)
+    logger_msg(error_)
+
+    return False

@@ -8,6 +8,7 @@
 # ---------------------------------------------
 from src.business.tasks.promo_work.get_current_promos.start_get_current_promos import StartGetCurrentPromos
 from src.business.tasks.promo_work.to_go_promo_page.start_to_go_promo_page_ import to_go_promo_page
+from src.utils._logger import logger_msg
 from src.utils.utils_decorators import catch_and_report
 
 
@@ -28,7 +29,9 @@ class StartPromoLogic:
         if not is_valid_cabinet:
             error_ = f'Не смог зайти на страницу акций в кабинете "{self.cabinet}"'
 
-            raise Exception(error_)
+            logger_msg(error_)
+
+            return False
 
         await StartGetCurrentPromos(self.settings).start_work()
 

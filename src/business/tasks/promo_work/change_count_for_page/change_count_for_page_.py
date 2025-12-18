@@ -11,7 +11,7 @@ import time
 
 from selenium.webdriver.common.by import By
 
-from settings import WAIT_PRODUCT_TABLE_XPATH
+from settings import WAIT_PRODUCT_TABLE_XPATH, COUNT_PRODUCT_FROM_PAGE
 from src.business.tasks.promo_work.to_go_promo_page.wait_load_cabinet_ import wait_load_cabinet
 from src.utils._logger import logger_msg
 
@@ -42,18 +42,26 @@ def _click_target_count(driver, target_count):
 async def change_count_for_page(settings):
     driver = settings['driver']
 
-    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    try:
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    except Exception as es:
+        error_ = f'change_count_for_page: Ошибка при работе на странице {es} '
 
-    target_count = 100
+        logger_msg(error_)
+
+        try:
+            driver.refresh()
+        except:
+            pass
 
     for _try in range(3):
-        activate_target_count = _get_status_target_count(driver, target_count)
+        activate_target_count = _get_status_target_count(driver, COUNT_PRODUCT_FROM_PAGE)
 
         if activate_target_count:
             driver.execute_script("window.scrollTo(0, 0);")
             return True
 
-        res_click = _click_target_count(driver, target_count)
+        res_click = _click_target_count(driver, COUNT_PRODUCT_FROM_PAGE)
 
         good_load = wait_load_cabinet(driver, WAIT_PRODUCT_TABLE_XPATH, count=120)
 

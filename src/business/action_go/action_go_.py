@@ -11,6 +11,7 @@ import asyncio
 from selenium.webdriver.common.by import By
 
 from src.business.get_state_select.get_state_select_ import get_state_select
+from src.business.popup_change.start_popup_change_ import start_popup_change
 from src.utils._logger import logger_msg
 from src.utils.telegram_debug import SendlerOneCreate
 
@@ -34,6 +35,9 @@ async def action_go(settings):
     data_product = settings['data_product']
 
     for _try in range(4):
+        if _try > 0:
+            is_change_promo = start_popup_change({"driver": driver})
+
         status_selector = get_state_select(product)
 
         # Включен

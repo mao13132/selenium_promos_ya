@@ -43,18 +43,18 @@ def get_browser_and_close(path_chrome, name_profile_chrome, path_short_chrome):
                     pass
                 try:
                     browser.driver.execute_cdp_cmd("Browser.close", {})
-                    print("Попытка закрытия браузера через CDP выполнена")
+                    print("Успешно закрыл браузер")
                 except Exception:
                     pass
 
                 # Если браузер уже закрыт через CDP, пропускаем любую попытку закрытия
                 if getattr(browser.driver, '_closed_by_cdp', False):
-                    print("Браузер уже закрыт через CDP — пропускаю финальное закрытие")
+                    pass
                 else:
                     success = graceful_browser_shutdown(browser.driver, name_profile_chrome, timeout=30)
 
                     if success:
-                        print("Браузер успешно закрыт")
+                        pass
                     else:
                         logger_msg("Грамотное закрытие не удалось, выполняю экстренную очистку")
                         emergency_browser_cleanup(browser.driver, name_profile_chrome)
