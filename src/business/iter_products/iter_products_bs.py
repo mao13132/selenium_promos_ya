@@ -1,4 +1,5 @@
 from src.business.analyser_click_product.analyser_click_product_ import analyser_click_product
+from src.business.popup_change.start_popup_change_ import start_popup_change
 from src.business.tasks.promo_work.page_work_promo.extract_info_by_product.extract_info_by_product_bs import \
     extract_info_list_by_html
 from src.business.action_go.action_go_ import action_go
@@ -38,6 +39,8 @@ class IterProductsBS:
             to_click.append({"idx": idx, "action": action, "data_product": data_product})
 
         for item in to_click:
+            is_change_promo = await start_popup_change({"driver": self.driver})
+
             idx = item["idx"]
             try:
                 product = rows[idx]
