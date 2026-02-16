@@ -47,7 +47,12 @@ class IterProductsBS:
             except:
                 continue
             activate_element(self.driver, product)
-            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", product)
+
+            try:
+                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", product)
+            except:
+                pass
+
             item["data_product"]["action"] = item["action"]
             res_action_work = await action_go(
                 {

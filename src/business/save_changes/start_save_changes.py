@@ -12,8 +12,9 @@ from selenium.webdriver.common.by import By
 
 from src.utils._logger import logger_msg
 
-XPATH_SAVE_BTN = f"//*[contains(@*[starts-with(name(), 'data-e2e')], 'promo') and " \
-                 f"contains(@*[starts-with(name(), 'data-e2e')], 'save')]"
+XPATH_SAVE_BTN = (f"//*[contains(@*[starts-with(name(), 'data-e2e')], 'promo') and "
+                  f"contains(@*[starts-with(name(), 'data-e2e')], 'save')] | "
+                  f"//div[contains(@class, 'actions')]//button[.//span[text()='Подтвердить участие']]")
 
 
 def _exists_save_btn(driver):

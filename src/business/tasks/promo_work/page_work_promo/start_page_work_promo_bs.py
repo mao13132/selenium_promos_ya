@@ -29,6 +29,12 @@ class StartPageWorkPromoBS:
             html = self.driver.page_source
 
             work_from_products = await IterProductsBS(self.settings).start_work(html, rows)
+
+            if not work_from_products:
+                print(f'Нет результата обработки продуктов')
+
+                return False
+
             products_history = work_from_products.get("products_history", [])
             all_product_history.extend(products_history)
             is_change = work_from_products.get("is_change", False)
